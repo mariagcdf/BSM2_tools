@@ -1,5 +1,5 @@
 import pandas as pd
-from src.bsm2tools.loader import load_csv
+from bsm2tools.loader import load_csv
 
 def test_load_csv_realistic():
     # Simula un pequeño dataset como el de BSM2
