@@ -1,25 +1,25 @@
+import pytest
 import pandas as pd
-from bsm2tools.loader import load_csv
+from io import StringIO
+from bsm2tools.loader import load_and_validate_csv
 
-def test_load_csv_realistic():
-    # Simula un pequeño dataset como el de BSM2
-    data = {
-        'Time': [0, 15, 30],
-        'Q': [18465.7, 18392.5, 18402.0],
-        'TSS': [2985.4, 2992.1, 3000.0],
-        'SALK': [4.2, 4.3, 4.1],
-        'TN': [32.5, 33.0, 32.7],
-        'SNH': [15.3, 15.0, 15.5],
-        'Temp': [17.2, 17.4, 17.5]
-    }
-    df_expected = pd.DataFrame(data)
+VALID_CSV = """Día,DBO_salida (mg/L),DQO_salida (mg/L),SST_salida (mg/L),Ntot_salida (mg/L),NH_salida (mg/L),PT_salida (mg/L),F/M,TRC (d-1),TRH (h),Recir. Interna (m3/d),Recir. Externa (m3/d),Q (m3/d),Temperatura (ºC),DQO_brut (mg/L),DBO_brut (mg/L),SST_brut (mg/L),NH_brut (mg/L)
+2025-01-01,12,80,25,15,3.5,1.1,0.4,15,6,1200,300,10000,18,350,220,180,28
+"""
 
-    # Guardamos como un CSV temporal
-    test_csv_path = 'test_bsm2.csv'
-    df_expected.to_csv(test_csv_path, index=False)
+INVALID_CSV = """Día,DBO_salida (mg/L),DQO_salida (mg/L)
+2025-01-01,12,80
+"""
 
-    # Cargar usando tu función
-    df_loaded = load_csv(test_csv_path)
+def test_load_and_validate_csv_valid():
+    data = StringIO(VALID_CSV)
+    df = load_and_validate_csv(data, sep=",", verbose=False)
+    assert isinstance(df, pd.DataFrame)
+    assert 'Día' in df.columns
+    assert pd.api.types.is_datetime64_any_dtype(df['Día'])
 
-    # Verificar que los datos coinciden
-    pd.testing.assert_frame_equal(df_loaded, df_expected)
+def test_load_and_validate_csv_invalid():
+    data = StringIO(INVALID_CSV)
+    with pytest.raises(ValueError) as exc_info:
+        load_and_validate_csv(data, sep=",", verbose=False)
+    assert "Missing required columns" in str(exc_info.value)
