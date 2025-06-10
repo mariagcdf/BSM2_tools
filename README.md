@@ -62,6 +62,8 @@ Para utilizar correctamente las funciones del analizador, el archivo `.csv` de e
 
 > ⚠️ **Importante:** Los nombres de las columnas deben coincidir exactamente como se muestran. Si tu conjunto de datos utiliza encabezados diferentes, deberás modificarlos (en los parámetros obligatorios al menos, además, siempre es recomendable poner las unidades).
 
+⚠️ **Importante2:** Dado que los requisitos de estructura son complejos, en la carpeta data/ se incluye un archivo CSV que cumple con todos los requerimientos y es compatible con todos los códigos presentados en este documento.
+
 La imagen a continuación proporciona un resumen visual de las variables de entrada requeridas, sus categorías funcionales y su ubicación típica dentro del esquema de la planta.
 
 ![texto alternativo](image.png)
@@ -219,7 +221,7 @@ Tus variables adicionales pueden ser cualquier columna de tu conjunto de datos q
 - `"Carga másica (kg DQO/kg SSV)"`
 - Cualquier otra contenida en tu DataFrame que consideres que puede afectar a tu parámetro en violación.
 
-**Ejemplo, para usar visualizer con otro parámetro de volación y otras variables causales:**
+**Ejemplo, para usar visualizer con otro parámetro de volación y otras variables:**
 
 ```python
 from bsm2tools.loader import load_and_validate_csv
