@@ -1,43 +1,55 @@
 import plotly.graph_objects as go
 import pandas as pd
 from collections import Counter
+from bsm2tools.analyzer import analizar_violaciones
 
-def graficar_sankey_causas_explicaciones(violaciones_info, columna_objetivo='el parámetro'):
+
+def graficar_sankey(df, columna_objetivo="DBO_salida (mg/L)", umbral=25,
+                    variables_causales=None, nombre_parametro="DBO"):
     """
-    Generate a Sankey diagram to visualize the flow from direct causes 
-    to explanations to reactive control strategies for violations.
-    
-    Parameters:
-    - violaciones_info: list of dicts from analizar_violaciones
-    - columna_objetivo: name of the violated parameter (for title)
+    Ejecuta automáticamente el análisis de violaciones y genera un diagrama Sankey.
+    Solo necesita el DataFrame de entrada.
     """
+    if variables_causales is None:
+        variables_causales = ["F/M", "TRC (d-1)", "TRH (h)"]
+
+    # Ejecutar análisis causal con analyzer
+    violaciones_info = analizar_violaciones(
+        df,
+        columna_objetivo=columna_objetivo,
+        umbral=umbral,
+        variables_causales=variables_causales,
+        nombre_parametro=nombre_parametro,
+        imprimir=False
+    )
 
     if not violaciones_info:
-        print("No hay violaciones que mostrar en el diagrama Sankey.")
+        print("No se detectaron violaciones. No se generará el diagrama Sankey.")
         return
 
-    # Ask for user input (year or specific month)
-    opcion = input("\nVisualizar Sankey para todo el año o un mes concreto? (todo/mes): ").strip().lower()
+    # Preguntar si se desea visualizar todo el año o un mes específico
+    opcion = input("\n¿Visualizar Sankey para todo el año o un mes concreto? (todo/mes): ").strip().lower()
     mes_seleccionado = None
     if opcion == "mes":
         mes_seleccionado = input("Introduce el mes en formato AAAA-MM: ").strip()
         try:
             pd.to_datetime(mes_seleccionado + "-01")
         except ValueError:
-            print("Formato de mes no válido. Se visualizará todo el año.")
+            print("Mes no válido. Se mostrará todo el año.")
             mes_seleccionado = None
 
-    # Filter by selected month if needed
     if mes_seleccionado:
-        violaciones_info = [v for v in violaciones_info if pd.to_datetime(v['fecha']).strftime('%Y-%m') == mes_seleccionado]
+        violaciones_info = [
+            v for v in violaciones_info
+            if pd.to_datetime(v['fecha']).strftime('%Y-%m') == mes_seleccionado
+        ]
+        if not violaciones_info:
+            print("No hay violaciones en ese mes.")
+            return
 
-    if not violaciones_info:
-        print("No hay violaciones en el mes seleccionado.")
-        return
-
-    # Create link pairs
-    enlaces_1 = []  # causa -> explicacion
-    enlaces_2 = []  # explicacion -> estrategia
+    # Construir enlaces para el Sankey
+    enlaces_1 = []
+    enlaces_2 = []
 
     for v in violaciones_info:
         causas = v.get('causas_directas') or ["sin causa"]
@@ -60,9 +72,7 @@ def graficar_sankey_causas_explicaciones(violaciones_info, columna_objetivo='el 
     nodos = nodos_causas + nodos_explicaciones + nodos_estrategias
     indices = {n: i for i, n in enumerate(nodos)}
 
-    sources = []
-    targets = []
-    values = []
+    sources, targets, values = [], [], []
 
     for (c, e), v in conteos_1.items():
         sources.append(indices[c])
@@ -74,13 +84,11 @@ def graficar_sankey_causas_explicaciones(violaciones_info, columna_objetivo='el 
         targets.append(indices[s])
         values.append(v)
 
-    colores = [
-        'rgba(31, 119, 180, 0.8)' for _ in nodos_causas
-    ] + [
-        'rgba(148, 103, 189, 0.8)' for _ in nodos_explicaciones
-    ] + [
-        'rgba(214, 39, 40, 0.8)' for _ in nodos_estrategias
-    ]
+    colores = (
+        ['rgba(31, 119, 180, 0.8)'] * len(nodos_causas) +
+        ['rgba(148, 103, 189, 0.8)'] * len(nodos_explicaciones) +
+        ['rgba(214, 39, 40, 0.8)'] * len(nodos_estrategias)
+    )
 
     fig = go.Figure(data=[go.Sankey(
         node=dict(
@@ -98,7 +106,7 @@ def graficar_sankey_causas_explicaciones(violaciones_info, columna_objetivo='el 
         )
     )])
 
-    titulo = f"Causal Sankey diagram for {columna_objetivo}"
+    titulo = f"Diagrama Sankey causal para {nombre_parametro}"
     if mes_seleccionado:
         titulo += f" ({mes_seleccionado})"
 
