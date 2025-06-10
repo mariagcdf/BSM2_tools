@@ -3,31 +3,31 @@ import pandas as pd
 from collections import Counter
 from bsm2tools.analyzer import analizar_violaciones
 
-
-def graficar_sankey(df, columna_objetivo="DBO_salida (mg/L)", umbral=25,
+def graficar_sankey(input_data, columna_objetivo="DBO_salida (mg/L)", umbral=25,
                     variables_causales=None, nombre_parametro="DBO"):
     """
-    Ejecuta automáticamente el análisis de violaciones y genera un diagrama Sankey.
-    Solo necesita el DataFrame de entrada.
+    Si recibe un DataFrame, ejecuta automáticamente el análisis de violaciones.
+    Si recibe una lista de dicts (violaciones_info), la usa directamente.
     """
     if variables_causales is None:
         variables_causales = ["F/M", "TRC (d-1)", "TRH (h)"]
 
-    # Ejecutar análisis causal con analyzer
-    violaciones_info = analizar_violaciones(
-        df,
-        columna_objetivo=columna_objetivo,
-        umbral=umbral,
-        variables_causales=variables_causales,
-        nombre_parametro=nombre_parametro,
-        imprimir=False
-    )
+    if isinstance(input_data, pd.DataFrame):
+        violaciones_info = analizar_violaciones(
+            input_data,
+            columna_objetivo=columna_objetivo,
+            umbral=umbral,
+            variables_causales=variables_causales,
+            nombre_parametro=nombre_parametro,
+            imprimir=False
+        )
+    else:
+        violaciones_info = input_data
 
     if not violaciones_info:
         print("No se detectaron violaciones. No se generará el diagrama Sankey.")
         return
 
-    # Preguntar si se desea visualizar todo el año o un mes específico
     opcion = input("\n¿Visualizar Sankey para todo el año o un mes concreto? (todo/mes): ").strip().lower()
     mes_seleccionado = None
     if opcion == "mes":
@@ -47,10 +47,7 @@ def graficar_sankey(df, columna_objetivo="DBO_salida (mg/L)", umbral=25,
             print("No hay violaciones en ese mes.")
             return
 
-    # Construir enlaces para el Sankey
-    enlaces_1 = []
-    enlaces_2 = []
-
+    enlaces_1, enlaces_2 = [], []
     for v in violaciones_info:
         causas = v.get('causas_directas') or ["sin causa"]
         explicaciones = v.get('explicaciones') or ["sin explicación"]
