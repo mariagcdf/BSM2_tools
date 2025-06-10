@@ -87,3 +87,24 @@ The `analyzer` module is responsible for identifying regulatory violations in wa
 
 The module is designed to work with daily resolution data, assuming a DataFrame with typical WWTP columns (e.g. flows, temperatures, influent/effluent concentrations, operational parameters).
 
+### 🧠 Key Function
+
+
+## 🎯 `visualizer` module — Sankey diagram for violations and causes
+
+The `visualizer` module provides an intuitive way to understand **why** effluent quality violations occurred and **how** the system responded. It builds on the output of the `analyzer` module and produces Sankey diagrams that map:
+
+- **Direct causes** (e.g., poor sludge age, high F/M)
+- **Secondary explanations** (e.g., shock loads, temperature drops)
+- **Operational responses** (e.g., increased recirculation)
+
+### 🧠 Key Function
+
+```python
+from bsm2tools.analyzer import analizar_violaciones
+from bsm2tools.visualizer import graficar_sankey_causas_explicaciones
+
+df = pd.read_csv("mi_archivo.csv")
+df_resultados = analizar_violaciones(df)
+graficar_sankey_causas_explicaciones(df_resultados, variable_objetivo="DBO_salida (mg/L)")
+
