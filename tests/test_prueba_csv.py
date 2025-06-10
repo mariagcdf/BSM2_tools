@@ -3,7 +3,7 @@ from bsm2tools.analyzer import analizar_violaciones
 from bsm2tools.visualizer import graficar_sankey
 
 # Carga el CSV
-df = load_and_validate_csv("data/datos_simulados_planta_completo.csv", sep=";")
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv", sep=",")
 
 # Análisis de violaciones (ej: DBO > 25 mg/L)
 violaciones_info = analizar_violaciones(
