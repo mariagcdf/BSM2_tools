@@ -58,7 +58,7 @@ def analizar_violaciones(df, columna_objetivo="DBO_salida (mg/L)", umbral=25,
     nh_bruto_alto = np.percentile(df['NH_brut (mg/L)'].dropna(), 80)
     dbo_bruta_alto = np.percentile(df['DBO_brut (mg/L)'].dropna(), 80)
 
-    resultados = []
+    violaciones_info = []
 
     for idx, fila in violaciones.iterrows():
         fecha = pd.to_datetime(fila['Día']).date()
@@ -110,11 +110,11 @@ def analizar_violaciones(df, columna_objetivo="DBO_salida (mg/L)", umbral=25,
                 print(f"  ↪ Respuestas operativas: {', '.join(estrategias)}")
             print("-" * 80)
 
-        resultados.append({
+        violaciones_info.append({
             'fecha': fecha,
             'causas_directas': causas_directas,
             'explicaciones': causas_secundarias,
             'estrategias_control_reactivas': estrategias
         })
 
-    return resultados
+    return violaciones_info
