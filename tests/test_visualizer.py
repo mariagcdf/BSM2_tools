@@ -1,4 +1,4 @@
-from bsm2tools.visualizer import graficar_sankey_causas_explicaciones
+from bsm2tools.visualizer import graficar_sankey
 
 def test_graficar_sankey_dummy(monkeypatch):
     # Datos simulados para una violación
@@ -13,4 +13,4 @@ def test_graficar_sankey_dummy(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: "todo")
 
     # Simplemente se asegura de que la función corre sin error
-    graficar_sankey_causas_explicaciones(violaciones_info, columna_objetivo='NH4_efluente')
+    graficar_sankey(violaciones_info, columna_objetivo='NH4_efluente')
