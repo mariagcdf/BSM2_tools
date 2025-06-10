@@ -14,7 +14,7 @@ REQUIRED_COLUMNS = [
 def load_and_validate_csv(path: str, sep: str = ',', verbose: bool = True) -> pd.DataFrame:
     """
     Loads a CSV file and checks that all required columns are present.
-    
+
     Parameters:
     - path (str): Path to the CSV file.
     - sep (str): Separator used in the CSV (default: ',').
@@ -28,16 +28,16 @@ def load_and_validate_csv(path: str, sep: str = ',', verbose: bool = True) -> pd
     """
     df = pd.read_csv(path, sep=sep)
 
-    missing = [col for col in REQUIRED_COLUMNS if col not in df.columns]
+    missing = set(REQUIRED_COLUMNS) - set(df.columns)
     if missing:
-        raise ValueError(f"❌ Missing required columns in CSV: {missing}")
+        raise ValueError(f"❌ Missing required columns in CSV: {sorted(missing)}")
 
-    # Convert 'Día' to datetime
     df['Día'] = pd.to_datetime(df['Día'], errors='coerce')
     if df['Día'].isnull().any():
         raise ValueError("❌ Some values in 'Día' could not be converted to datetime.")
 
     if verbose:
         print("✅ CSV loaded successfully. All required columns are present.")
-    
+        print(f"ℹ️ Columns in file: {list(df.columns)}")
+
     return df
