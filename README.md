@@ -93,8 +93,6 @@ source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 
 # Instala el paquete y sus dependencias
 pip install .
-cd bsm2-tools
-
 ```
 
 ## 📊 Módulo `analyzer` — Motor de detección de violaciones y análisis causal
