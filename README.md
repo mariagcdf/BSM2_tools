@@ -130,7 +130,7 @@ df = load_and_validate_csv("data/datos_simulados_planta_completo.csv") #este es 
 violaciones_info = analizar_violaciones(
     df,
       columna_objetivo="DBO_salida (mg/L)",
-      umbral=25,
+      umbral=10,
       variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
       nombre_parametro="DBO",
       imprimir=True
@@ -164,7 +164,7 @@ df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 graficar_sankey(
     df,
     columna_objetivo="DBO_salida (mg/L)",
-    umbral=25,
+    umbral=10,
     variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
     nombre_parametro="DBO"
 )
