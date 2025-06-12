@@ -62,7 +62,7 @@ Para utilizar correctamente las funciones del analizador, el archivo `.csv` de e
 
 > ⚠️ **Importante:** Los nombres de las columnas deben coincidir exactamente como se muestran. Si tu conjunto de datos utiliza encabezados diferentes, deberás modificarlos (en los parámetros obligatorios al menos, además, siempre es recomendable poner las unidades).
 
-⚠️ **Importante2:** Dado que los requisitos de estructura son complejos, en la carpeta data/ se incluye un archivo CSV que cumple con todos los requerimientos y es compatible con todos los códigos presentados en este documento.
+> ⚠️ **Importante 2:** Dado que los requisitos de estructura son complejos, en la carpeta data/ se incluye un archivo CSV que cumple con todos los requerimientos y es compatible con todos los códigos presentados en este documento.
 
 La imagen a continuación proporciona un resumen visual de las variables de entrada requeridas, sus categorías funcionales y su ubicación típica dentro del esquema de la planta.
 
