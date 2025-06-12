@@ -119,11 +119,13 @@ Recuerda: Este módulo está diseñado para trabajar con un único dato diario p
 
 ### 🧠 Cómo llamar a la función analyzer, qué parámetros necesita:
 
-```python
-from bsm2tools.loader import load_and_validate_csv
+```
+$env:PYTHONPATH="src"
+python
+from bsm2tools.loader import load_and_validate_csv #esta es obligatorio para que se cargue bien el CSV
 from bsm2tools.analyzer import analizar_violaciones
 
-df = load_and_validate_csv("resultados_simulacion.csv")
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv") #este es el CSV que está en \data
 
 violaciones_info = analizar_violaciones(
     df,
@@ -149,12 +151,14 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 - **Respuestas operativas** (por ejemplo, aumento de recirculación)
 
 ### 🧠 Cómo llamar a la función visualizer, qué parametros necesita:
-```python
+```
+$env:PYTHONPATH="src"
+python
 from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.visualizer import graficar_sankey
 
-# Cargar y analizar datos
-df = load_and_validate_csv("resultados_simulacion.csv")
+# Cargar y analizar datos (desde el CSV que tengo subido en data)
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
 # El visualizador llamará automáticamente al módulo analyzer
 graficar_sankey(
@@ -164,9 +168,8 @@ graficar_sankey(
     variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
     nombre_parametro="DBO"
 )
-## Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
 ```
-"""
+Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
 
 ## ⚙️ Personalización de parámetros y variables en bsm2-tools
 
