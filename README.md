@@ -119,22 +119,27 @@ Recuerda: Este módulo está diseñado para trabajar con un único dato diario p
 
 ### 🧠 Cómo llamar a la función analyzer, qué parámetros necesita:
 
-```
+```powershell
+# Paso 1: Ejecutar en PowerShell
+
+cd bsm2-tools
 $env:PYTHONPATH="src"
 python
-from bsm2tools.loader import load_and_validate_csv #esta es obligatorio para que se cargue bien el CSV
+
+# Paso 2: Ejecutar dentro del intérprete de Python:
+
+from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.analyzer import analizar_violaciones
 
-df = load_and_validate_csv("data/datos_simulados_planta_completo.csv") #este es el CSV que está en \data
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
 violaciones_info = analizar_violaciones(
     df,
-      columna_objetivo="DBO_salida (mg/L)",
-      umbral=10,
-      variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
-      nombre_parametro="DBO",
-      imprimir=True
-      # Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
+    columna_objetivo="DBO_salida (mg/L)",
+    umbral=10,
+    variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
+    nombre_parametro="DBO",
+    imprimir=True
 )
 ```
 
@@ -150,17 +155,27 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 - **Explicaciones secundarias** (por ejemplo, cargas de choque, caídas de temperatura)
 - **Respuestas operativas** (por ejemplo, aumento de recirculación)
 
-### 🧠 Cómo llamar a la función visualizer, qué parametros necesita:
+### 🧠 Cómo llamar a la función visualizer, qué parametros necesita
+
 ```
+#OJO! Te puede preguntar si quieres graficar todo o un mes -> elige: todo (en este CSV no hay tantos datos)
+#También te abrirá una página web con el diagrama.
+
+# Paso 1: Ejecutar en PowerShell (terminal)
+
+cd bsm2-tools
 $env:PYTHONPATH="src"
 python
+
+# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
+
 from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.visualizer import graficar_sankey
 
 # Cargar y analizar datos (desde el CSV que tengo subido en data)
 df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
-# El visualizador llamará automáticamente al módulo analyzer
+#Graficar
 graficar_sankey(
     df,
     columna_objetivo="DBO_salida (mg/L)",
