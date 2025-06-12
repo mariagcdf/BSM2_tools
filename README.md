@@ -93,6 +93,7 @@ source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 
 # Instala el paquete y sus dependencias
 pip install .
+cd bsm2-tools
 
 ```
 
@@ -122,7 +123,6 @@ Recuerda: Este módulo está diseñado para trabajar con un único dato diario p
 ```bash
 # Paso 1: Ejecutar en PowerShell (terminal)
 
-cd bsm2-tools
 $env:PYTHONPATH="src"
 python
 ```
@@ -164,7 +164,6 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 
 # Paso 1: Ejecutar en PowerShell (terminal)
 
-cd bsm2-tools
 $env:PYTHONPATH="src"
 python
 ```
@@ -246,7 +245,6 @@ Tus variables adicionales pueden ser cualquier columna de tu conjunto de datos q
 
 # Paso 1: Ejecutar en PowerShell (terminal)
 
-cd bsm2-tools
 $env:PYTHONPATH="src"
 python
 
