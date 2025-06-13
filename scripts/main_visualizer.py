@@ -1,3 +1,4 @@
+#en este script es en el que puedes cambiar los parámetros de análisis y la ruta del CSV
 
 from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.visualizer import graficar_sankey
