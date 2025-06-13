@@ -118,28 +118,8 @@ Recuerda: Este módulo está diseñado para trabajar con un único dato diario p
 
 ### 🧠 Cómo llamar a la función analyzer, qué parámetros necesita:
 
-```bash
-# Paso 1: Ejecutar en PowerShell (terminal)
-
-$env:PYTHONPATH="src"
-python
-```
-```python
-# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
-
-from bsm2tools.loader import load_and_validate_csv
-from bsm2tools.analyzer import analizar_violaciones
-
-df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
-
-violaciones_info = analizar_violaciones(
-    df,
-    columna_objetivo="DBO_salida (mg/L)",
-    umbral=10,
-    variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
-    nombre_parametro="DBO",
-    imprimir=True
-)
+```powershell
+.\scripts\run_analyzer.ps1
 ```
 
 ## 🎯 Módulo `visualizer` — Diagrama de Sankey para violaciones y causas
@@ -156,40 +136,16 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 
 ### 🧠 Cómo llamar a la función visualizer, qué parametros necesita
 
-```bash
-#OJO! Te puede preguntar si quieres graficar todo o un mes -> elige: todo (en este CSV no hay tantos datos)
-#También te abrirá una página web con el diagrama.
-
-# Paso 1: Ejecutar en PowerShell (terminal)
-
-$env:PYTHONPATH="src"
-python
+```powershell
+.\scripts\run_visualizer.ps1
 ```
-```python
-# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
 
-from bsm2tools.loader import load_and_validate_csv
-from bsm2tools.visualizer import graficar_sankey
-
-# Cargar y analizar datos (desde el CSV que tengo subido en data)
-df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
-
-#Graficar
-graficar_sankey(
-    df,
-    columna_objetivo="DBO_salida (mg/L)",
-    umbral=10,
-    variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
-    nombre_parametro="DBO"
-)
-```
 Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
 
 ## ⚙️ Personalización de parámetros y variables en bsm2-tools
 
 Puedes adaptar el análisis y la visualización ajustando los siguientes parámetros:
 
----
 
 ### 1. `columna_objetivo` — Parámetro a monitorear para violaciones
 
@@ -200,7 +156,6 @@ Esta es la variable de calidad del efluente que deseas analizar (por ejemplo, DB
 - `"NH_salida (mg/L)"` &nbsp;→&nbsp; Amonio
 - `"PT_salida (mg/L)"` &nbsp;→&nbsp; Fósforo Total
 
----
 
 ### 2. `umbral` — Umbral de violación
 
@@ -213,7 +168,6 @@ Este valor establece la concentración máxima aceptable antes de que se marque 
 
 > **Nota:** El valor debe coincidir con las unidades de tu conjunto de datos (típicamente mg/L).
 
----
 
 ### 3. `variables_causales` — Variables operativas a analizar
 
@@ -238,34 +192,74 @@ Tus variables adicionales pueden ser cualquier columna de tu conjunto de datos q
 - `"Carga másica (kg DQO/kg SSV)"`
 - Cualquier otra contenida en tu DataFrame que consideres que puede afectar a tu parámetro en violación.
 
-**Ejemplo, para usar visualizer con otro parámetro de volación y otras variables:**
+
+
+## 🛠️ Personalización de la visualización y análisis
+
+**Ejemplo para usar visualizer y analyzer con otros parámetro de violación y otras variables:**
+
+### 📊 Análisis gráfico (VISUALIZER)
+
+Si deseas cambiar el **parámetro de violación** (por ejemplo, analizar amonio en lugar de DBO) o modificar las **variables causales**, simplemente edita el archivo:
+
+```
+scripts/main_visualizer.py
 ```
 
-# Paso 1: Ejecutar en PowerShell (terminal)
-
-$env:PYTHONPATH="src"
-python
-
-# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
+Reemplaza el bloque de visualización por algo como esto:
 
 ```python
-from bsm2tools.loader import load_and_validate_csv
-from bsm2tools.visualizer import graficar_sankey
+from bsm2tools.loader import load_and_validate_csv      #manten esta línea
+from bsm2tools.visualizer import graficar_sankey        #manten esta línea
 
-# MODIFICA LA RUTA EN FUNCIÓN DE TU CSV
+# Carga de datos (ajusta la ruta a tu archivo CSV)
 df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
-# Graficar:
+# Visualización personalizada:
 graficar_sankey(
     df,
-    columna_objetivo="NH_salida (mg/L)",
-    umbral=5,
-    variables_causales = [
-      "F/M",
-      "TRH (h)",
-      "Edad del lodo (d)",
-      "SST_reactor (mg/L)"]
-    nombre_parametro="AMONIO DE SALIDA")
+    columna_objetivo="NH_salida (mg/L)",           # ⚠️ Parámetro que quieres analizar (DBO, DQO, etc.)
+    umbral=5,                                      # ⚠️ Umbral legislativo de la violación
+    variables_causales=[                           # ⚠️ Variables causales, introduce las que creas
+        "F/M",                                     # que son importantes para tu parámetro (siempre de-
+        "TRH (h)",                                 # ben encontrarse en tu CSV, con el encabezado escrito
+        "Edad del lodo (d)",                       # tal y como aquí lo llames)
+        "SST_reactor (mg/L)"
+    ],
+    nombre_parametro="AMONIO DE SALIDA"            # ⚠️ Nombre para la figura
+)
 ```
 
-> Asegúrate de que todos los nombres de las columnas coincidan exactamente con los de tu DataFrame de entrada.
+Luego, ejecuta el script con:
+
+```bash
+.\scripts\run_visualizer.ps1
+```
+
+---
+
+### 📊 Análisis numérico en lugar de gráfico (ANALYZER)
+
+Si deseas realizar el análisis de violaciones con salida textual (sin gráfico), edita el archivo:
+
+```
+scripts/main_analyzer.py
+```
+
+y cambia los valores de:
+
+- `columna_objetivo`
+- `umbral`
+- `variables_causales`
+- `nombre_parametro`
+
+de la misma forma que en el visualizador.
+
+Ejecuta el analizador con:
+
+```bash
+.\scripts\run_analyzer.ps1
+```
+
+
+
