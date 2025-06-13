@@ -116,7 +116,7 @@ En la siguiente imagen se observa la salida por consola habitual:
 
 Recuerda: Este módulo está diseñado para trabajar con un único dato diario por variable.
 
-### 🧠 Cómo llamar a la función analyzer, qué parámetros necesita:
+### 🧠 Cómo llamar a la función analyzer:
 
 ```powershell
 .\scripts\run_analyzer.ps1
@@ -134,7 +134,7 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 - **Explicaciones secundarias** (por ejemplo, cargas de choque, caídas de temperatura)
 - **Respuestas operativas** (por ejemplo, aumento de recirculación)
 
-### 🧠 Cómo llamar a la función visualizer, qué parametros necesita
+### 🧠 Cómo llamar a la función visualizer:
 
 ```powershell
 .\scripts\run_visualizer.ps1
