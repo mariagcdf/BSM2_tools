@@ -68,7 +68,6 @@ La imagen a continuación proporciona un resumen visual de las variables de entr
 
 ![texto alternativo](image.png)
 
----
 
 ## 🚀 Funcionalidades de la librería:
 
@@ -94,6 +93,9 @@ source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 # Instala el paquete y sus dependencias
 pip install .
 ```
+
+---
+---
 
 ## 📊 Módulo `analyzer` — Motor de detección de violaciones y análisis causal
 
@@ -141,6 +143,9 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 ```
 
 Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
+
+---
+---
 
 ## ⚙️ Personalización de parámetros y variables en bsm2-tools
 
@@ -193,7 +198,6 @@ Tus variables adicionales pueden ser cualquier columna de tu conjunto de datos q
 - Cualquier otra contenida en tu DataFrame que consideres que puede afectar a tu parámetro en violación.
 
 
-
 ## 🛠️ Personalización de la visualización y análisis
 
 **Ejemplo para usar visualizer y analyzer con otros parámetro de violación y otras variables:**
@@ -236,7 +240,6 @@ Luego, ejecuta el script con:
 .\scripts\run_visualizer.ps1
 ```
 
----
 
 ### 📊 Análisis numérico en lugar de gráfico (ANALYZER)
 
