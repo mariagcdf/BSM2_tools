@@ -93,7 +93,6 @@ source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 
 # Instala el paquete y sus dependencias
 pip install .
-
 ```
 
 ## 📊 Módulo `analyzer` — Motor de detección de violaciones y análisis causal
@@ -119,22 +118,27 @@ Recuerda: Este módulo está diseñado para trabajar con un único dato diario p
 
 ### 🧠 Cómo llamar a la función analyzer, qué parámetros necesita:
 
-```
+```bash
+# Paso 1: Ejecutar en PowerShell (terminal)
+
 $env:PYTHONPATH="src"
 python
-from bsm2tools.loader import load_and_validate_csv #esta es obligatorio para que se cargue bien el CSV
+```
+```python
+# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
+
+from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.analyzer import analizar_violaciones
 
-df = load_and_validate_csv("data/datos_simulados_planta_completo.csv") #este es el CSV que está en \data
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
 violaciones_info = analizar_violaciones(
     df,
-      columna_objetivo="DBO_salida (mg/L)",
-      umbral=10,
-      variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
-      nombre_parametro="DBO",
-      imprimir=True
-      # Todos estos parámetros son personalizables. Consulta la sección siguiente para más detalles.
+    columna_objetivo="DBO_salida (mg/L)",
+    umbral=10,
+    variables_causales=["F/M", "TRC (d-1)", "TRH (h)"],
+    nombre_parametro="DBO",
+    imprimir=True
 )
 ```
 
@@ -150,17 +154,27 @@ El módulo `visualizer` proporciona una forma intuitiva de entender **por qué**
 - **Explicaciones secundarias** (por ejemplo, cargas de choque, caídas de temperatura)
 - **Respuestas operativas** (por ejemplo, aumento de recirculación)
 
-### 🧠 Cómo llamar a la función visualizer, qué parametros necesita:
-```
+### 🧠 Cómo llamar a la función visualizer, qué parametros necesita
+
+```bash
+#OJO! Te puede preguntar si quieres graficar todo o un mes -> elige: todo (en este CSV no hay tantos datos)
+#También te abrirá una página web con el diagrama.
+
+# Paso 1: Ejecutar en PowerShell (terminal)
+
 $env:PYTHONPATH="src"
 python
+```
+```python
+# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
+
 from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.visualizer import graficar_sankey
 
 # Cargar y analizar datos (desde el CSV que tengo subido en data)
 df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
-# El visualizador llamará automáticamente al módulo analyzer
+#Graficar
 graficar_sankey(
     df,
     columna_objetivo="DBO_salida (mg/L)",
@@ -225,15 +239,23 @@ Tus variables adicionales pueden ser cualquier columna de tu conjunto de datos q
 - Cualquier otra contenida en tu DataFrame que consideres que puede afectar a tu parámetro en violación.
 
 **Ejemplo, para usar visualizer con otro parámetro de volación y otras variables:**
+```
+
+# Paso 1: Ejecutar en PowerShell (terminal)
+
+$env:PYTHONPATH="src"
+python
+
+# Paso 2: Ejecutar dentro del intérprete de Python (copia directamente a partir de aquí):
 
 ```python
 from bsm2tools.loader import load_and_validate_csv
 from bsm2tools.visualizer import graficar_sankey
 
-# Cargar y analizar datos
-df = load_and_validate_csv("resultados_simulacion.csv")
+# MODIFICA LA RUTA EN FUNCIÓN DE TU CSV
+df = load_and_validate_csv("data/datos_simulados_planta_completo.csv")
 
-# El visualizador llamará automáticamente al módulo analyzer
+# Graficar:
 graficar_sankey(
     df,
     columna_objetivo="NH_salida (mg/L)",
